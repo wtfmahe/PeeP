@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "expo.modules.usagestats.usage-stats-release-3:/layout-v21/notification_template_icon_group.xml",
+        "source": "expo.modules.usagestats.usage-stats-core-1.13.1-30:/layout-v21/notification_template_icon_group.xml"
+    },
+    {
+        "merged": "expo.modules.usagestats.usage-stats-release-3:/layout-v21/notification_action_tombstone.xml",
+        "source": "expo.modules.usagestats.usage-stats-core-1.13.1-30:/layout-v21/notification_action_tombstone.xml"
+    },
+    {
+        "merged": "expo.modules.usagestats.usage-stats-release-3:/layout-v21/notification_template_custom_big.xml",
+        "source": "expo.modules.usagestats.usage-stats-core-1.13.1-30:/layout-v21/notification_template_custom_big.xml"
+    },
+    {
+        "merged": "expo.modules.usagestats.usage-stats-release-3:/layout-v21/notification_action.xml",
+        "source": "expo.modules.usagestats.usage-stats-core-1.13.1-30:/layout-v21/notification_action.xml"
+    }
+]

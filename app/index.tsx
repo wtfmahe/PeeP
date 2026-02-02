@@ -183,13 +183,26 @@ export default function HomeScreen() {
             const status = await getFriendStatus(friend.id);
             const friendlyName = status?.friendly_name || 'Offline 💤';
 
-            // Record the peep in database (this triggers notification for friend)
+            // Record the peep in database
             await supabase.from('peeps').insert({
                 from_user_id: user.id,
                 to_user_id: friend.id,
                 detected_app: status?.current_app || null,
                 friendly_name: friendlyName,
             });
+
+            // Send push notification to friend via Edge Function
+            try {
+                await supabase.functions.invoke('send-peep-notification', {
+                    body: {
+                        from_user_id: user.id,
+                        to_user_id: friend.id,
+                        friendly_name: friendlyName,
+                    },
+                });
+            } catch (pushError) {
+                console.log('Push notification failed (non-critical):', pushError);
+            }
 
             // Show what friend is doing
             showToast(`${friend.username}: ${friendlyName}`);
