@@ -101,4 +101,4 @@ MIT License - feel free to use and modify!
 
 ---
 
-Built with ❤️ using React Native & Expo
+Built with ❤️
