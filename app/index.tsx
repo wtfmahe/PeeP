@@ -99,8 +99,14 @@ export default function HomeScreen() {
     // Initialize on mount
     useEffect(() => {
         if (user) {
-            // Fetch friends
-            fetchFriends(user.id);
+            // Fetch friends first, THEN subscribe to status updates
+            const initializeApp = async () => {
+                await fetchFriends(user.id);
+                // Now friends are loaded, subscribe to real-time status updates
+                subscribeToStatusUpdates(user.id);
+            };
+
+            initializeApp();
 
             // Start broadcasting (only while app is active)
             startBroadcasting();
@@ -116,9 +122,6 @@ export default function HomeScreen() {
                 }
                 appState.current = nextAppState;
             });
-
-            // Subscribe to real-time status updates from friends
-            subscribeToStatusUpdates(user.id);
 
             // Subscribe to incoming peeps - show subtle toast notification
             const channel = supabase
@@ -206,6 +209,9 @@ export default function HomeScreen() {
 
             // Show what friend is doing
             showToast(`${friend.username}: ${friendlyName}`);
+
+            // Refresh friends list to update the card with latest status
+            await fetchFriends(user.id);
         } catch (error) {
             console.error('Peep error:', error);
             showToast('Could not peep friend');
