@@ -76,16 +76,16 @@ export default function HomeScreen() {
         }
     };
 
-    const startBroadcasting = () => {
+    const startBroadcasting = (intervalMs: number = 15000) => {
         // Broadcast immediately
         broadcastMyStatus();
 
-        // Then broadcast every 30 seconds while app is active
+        // Then broadcast at specified interval
         if (broadcastInterval.current) {
             clearInterval(broadcastInterval.current);
         }
-        broadcastInterval.current = setInterval(broadcastMyStatus, 30000);
-        console.log('Started broadcasting');
+        broadcastInterval.current = setInterval(broadcastMyStatus, intervalMs);
+        console.log(`Started broadcasting (every ${intervalMs / 1000}s)`);
     };
 
     const stopBroadcasting = () => {
@@ -108,17 +108,20 @@ export default function HomeScreen() {
 
             initializeApp();
 
-            // Start broadcasting (only while app is active)
-            startBroadcasting();
+            // Start broadcasting (every 15 seconds for real-time updates)
+            startBroadcasting(15000);
 
             // Listen for app state changes (foreground/background)
             const subscription = AppState.addEventListener('change', (nextAppState: AppStateStatus) => {
                 if (appState.current.match(/inactive|background/) && nextAppState === 'active') {
-                    // App came to foreground - start broadcasting
-                    startBroadcasting();
+                    // App came to foreground - broadcast frequently (15 sec)
+                    startBroadcasting(15000);
+                    // Also refresh friend status when coming back to app
+                    fetchFriends(user.id);
                 } else if (nextAppState.match(/inactive|background/)) {
-                    // App went to background - stop broadcasting (battery saver!)
-                    stopBroadcasting();
+                    // App went to background - keep broadcasting but slower (30 sec) to save battery
+                    // This is important so friends can see what app you're using!
+                    startBroadcasting(30000);
                 }
                 appState.current = nextAppState;
             });
